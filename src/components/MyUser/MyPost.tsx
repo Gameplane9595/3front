@@ -31,7 +31,7 @@ const MyPost = () => {
 	const [img, setImage] = useState('/')
 	const [postsList, setPostsList] = useState(postsMockList)
 	const search = useRef('')
-	const inputRef: any = useRef()
+	const inputRef = useRef<HTMLInputElement>(null)
 
 	// * 최초 게시글 목록 렌더
 	const FirstRender = async () => {
@@ -40,7 +40,7 @@ const MyPost = () => {
 
 	useEffect(() => {
 		// return FirstRender()
-		inputRef.current.focus()
+		inputRef.current?.focus()
 	}, [postsList])
 
 	// * 검색
