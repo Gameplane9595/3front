@@ -8,6 +8,7 @@ type BtnProps = {
   alert: string | null
 }
 
+// 훅이 아니라 컴포넌트인데 hooks 폴더 안에 있는게 어색합니다!
 export default memo(function Btn(props: BtnProps) {
   const router = useRouter();
 

@@ -7,6 +7,7 @@ import PostRouter from '../hooks/post_router'
 import Search from '../hooks/search'
 
 
+// 훅이 아니라 컴포넌트인데 hooks 폴더 안에 있는게 어색합니다!
 export default memo(function Search() {
 	const [searchVal, setSearchVal] = useRecoilState(searchValue);
 
@@ -34,7 +35,7 @@ export default memo(function Search() {
 const SearchDiv = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: center;   
+	align-items: center;
 	justify-content: space-between;
 `
 

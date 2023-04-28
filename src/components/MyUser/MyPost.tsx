@@ -75,6 +75,7 @@ const MyPost = () => {
 			{
 				postsList.map((post, idx) => {
 					return (
+						// key 속성을 써주시는게 좋습니다!
 						<ContentDiv id={post.id}>
 							<HeaderWrap>
 								<PostThumbnail alt={'썸네일'}></PostThumbnail>
@@ -108,7 +109,7 @@ const Conatainer = styled.div`
   * {
     display: flex;
     flex-direction: row;
-    align-items: center;   
+    align-items: center;
     margin: 1rem;
     border: 1px solid blue;
   }
@@ -117,7 +118,7 @@ const Conatainer = styled.div`
 const TopDiv = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: center;   
+	align-items: center;
 	justify-content: space-between;
 
 	padding: 0 3rem;
@@ -128,7 +129,7 @@ const TopDiv = styled.div`
 const SearchDiv = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: center;   
+	align-items: center;
 	justify-content: space-between;
 `
 
@@ -172,7 +173,7 @@ const ImgWrap = styled.img`
   justify-content: center;
 
 	flex-shrink: 0;
-	width: 25rem;	
+	width: 25rem;
 `
 
 const DescribeWrap = styled.div`
@@ -188,7 +189,7 @@ const DescribeWrap = styled.div`
 const ContentDiv = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: center;   
+	align-items: center;
 	margin: 3rem;
 	border: 1px solid black;
 
@@ -198,7 +199,7 @@ const ContentDiv = styled.div`
 const HeaderWrap = styled.div`
 	display: flex;
 	flex-direction: column;
-	align-items: center;   
+	align-items: center;
 	justify-contents: center;
 	border: 1px solid black;
 
@@ -208,7 +209,7 @@ const HeaderWrap = styled.div`
 const PostThumbnail = styled.img`
 	display: flex;
 	flex-direction: column;
-	align-items: center;   
+	align-items: center;
 	justify-contents: center;
 
 	// flex-basis: 1rem;
@@ -219,7 +220,7 @@ const PostThumbnail = styled.img`
 const FooterWrap = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: space-between;   
+	align-items: space-between;
 	justify-contents: center;
 	margin: 0 1rem 1rem 1rem;
 	border: 1px solid black;

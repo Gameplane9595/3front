@@ -39,7 +39,7 @@ const Conatainer = styled.div`
   * {
     display: flex;
     flex-direction: row;
-    align-items: center;   
+    align-items: center;
     margin: 0.5rem;
     border: 1px solid black;
   }
