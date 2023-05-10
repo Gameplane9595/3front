@@ -74,14 +74,14 @@ const Category = () => {
           })}
       </CategoryItemWrapper>
 
-      {isModalOpened ? (
+      {/* {isModalOpened ? (
         <div>
           <CategoryModal
             categoryItem={categoryItem}
             onModalOpenedChange={handleModalOpened}
           />
         </div>
-      ) : null}
+      ) : null} */}
     </CategoryContainer>
   );
 };

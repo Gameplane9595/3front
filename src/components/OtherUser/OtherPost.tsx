@@ -1,7 +1,21 @@
 import { useState, useEffect, useRef, ChangeEvent } from 'react'
 // import { useRecoilState, useRecoilValue } from 'recoil';
 // import { useRouter } from 'next/router';
-import styled from 'styled-components'
+import Pagination from 'react-js-pagination';
+import {
+	Container,
+	TopDiv,
+	SearchDiv,
+	SearchInput,
+	SearchBtn,
+	ProfileDiv,
+	ImgWrap,
+	DescribeWrap,
+	ContentDiv,
+	HeaderWrap,
+	PostThumbnail,
+	FooterWrap
+} from './OtherPost-styled'
 import Btn from '../common/my_page/button'
 import PostRouter from '../common/my_page/post_router'
 
@@ -26,12 +40,19 @@ const postsMockList: any[] = [{
 	"createdAt": "2023-04-25T03:10:52.668Z"
 }]
 
-const UserPost = () => {
+const OtherPost = () => {
 	const [profile, setProfile] = useState<string>('설명글')
 	const [img, setImage] = useState<string>('/')
 	const [postsList, setPostsList] = useState(postsMockList)
 	const search: any = useRef('')
 	const inputRef: any = useRef()
+
+	const [ currPage, setCurrPage ] = useState<number>(1)
+  const [ totalPage, setTotalPage ] = useState(null)
+  const [ render, setRender ] = useState<boolean>(false);
+  const perPage = 10;
+
+  const params = { page:currPage, perPage: perPage}
 
 	// * 최초 게시글 목록 렌더
 	const FirstRender = async () => {
@@ -57,6 +78,27 @@ const UserPost = () => {
 			console.error("에러", error)
 		}
 	}
+
+	// * pagination
+  const handlePageChange = async (page: number) => {
+    if (currPage === page)
+      return;
+    setCurrPage(page);
+    setRender(true);
+    
+  }
+
+  const rending = async () => {
+    // const res = await API.get("/posts", params);
+    // setPosts(() => res.data.partialPosts);
+  }
+
+  // useEffect(() => {
+  //   if (render) {
+  //     rending();
+  //     setRender(false);
+  //   }
+  // }, [render, currPage])
 
 	return (
 		<Container>
@@ -89,140 +131,17 @@ const UserPost = () => {
 					)
 				}
 				)}
+				<Pagination
+          activePage={currPage}
+          itemsCountPerPage={perPage}
+          totalItemsCount={totalPage * perPage}
+          pageRangeDisplayed={totalPage}
+          prevPageText={"<"}
+          nextPageText={">"}
+          onChange={handlePageChange}
+        />
 		</Container >
 	);
 };
 
-export default UserPost;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid red;
-
-
-	height: auto;
-
-  * {
-    display: flex;
-    flex-direction: row;
-    align-items: center;   
-    margin: 1rem;
-    border: 1px solid blue;
-  }
-`;
-
-const TopDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;   
-	justify-content: space-between;
-
-	padding: 0 3rem;
-
-	width: 75%
-`
-
-const SearchDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;   
-	justify-content: space-between;
-`
-
-const SearchInput = styled.input`
-	padding-left: 0.5rem;
-
-	width: 15rem;
-	height: 2rem;
-
-	border: 1px solid black;
-  border-radius : 0.5rem;
-`
-
-const SearchBtn = styled.button`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.5rem 1rem 0.5rem 1rem;
-
-  flex-basis: 1rem;
-  flex-grow: 1;
-  border-radius : 0.5rem;
-  background-color: white;
-`
-
-const ProfileDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-
-	width: 75%;
-`
-
-const ImgWrap = styled.img`
-	display: flex;
-	flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-	flex-shrink: 0;
-	width: 25rem;	
-`
-
-const DescribeWrap = styled.div`
-	display: flex;
-	flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-	width: 25rem;
-	height: 10rem;
-`
-
-const ContentDiv = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;   
-	margin: 3rem;
-	border: 1px solid black;
-
-	width: 75%
-`
-
-const HeaderWrap = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;   
-	justify-contents: center;
-	border: 1px solid black;
-
-	width: 90%
-`
-
-const PostThumbnail = styled.img`
-	display: flex;
-	flex-direction: column;
-	align-items: center;   
-	justify-contents: center;
-
-	// flex-basis: 1rem;
-  // flex-grow: 0;
-
-`
-
-const FooterWrap = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: space-between;   
-	justify-contents: center;
-	margin: 0 1rem 1rem 1rem;
-	border: 1px solid black;
-
-	width: 90%
-`
+export default OtherPost;

@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { GlobalStyle } from '@/styles/globalStyle';
 import Head from 'next/head';
 import AppLayout from '@/components/layout/AppLayout';
+// import '@toast-ui/editor/dist/toastui-editor.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

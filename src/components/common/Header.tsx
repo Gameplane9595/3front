@@ -8,7 +8,6 @@ import {
   SearchUI,
   SearchInput,
   SearchButton,
-  HomeLogo,
   LogIn,
 } from './header-styled';
 import { useState, useEffect } from 'react';
@@ -30,6 +29,11 @@ const Header = () => {
     setSearchInput(event.target.value);
   };
 
+  const submitSearch = () => {
+    console.log('검색어', searchInput);
+    setIsSearchVisible(false);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
@@ -46,16 +50,12 @@ const Header = () => {
 
   return (
     <HeaderWrapper>
-      <Title>ThreeLines</Title>
+      <Home href={'/'}>
+        <Title>One-Line</Title>
+      </Home>
+
       <Nav>
-        <Search
-          src="/images/Search.png"
-          alt="검색"
-          width="30"
-          height="30"
-          onClick={handleClick}
-        />
-        {isSearchVisible && (
+        {isSearchVisible ? (
           <div
             className={`${SearchUI.search} ${
               isSearchVisible ? SearchUI.show : SearchUI.hide
@@ -67,8 +67,16 @@ const Header = () => {
               value={searchInput}
               onChange={handleSearchInputChange}
             />
-            <SearchButton>Search</SearchButton>
+            <SearchButton onClick={submitSearch}>Search</SearchButton>
           </div>
+        ) : (
+          <Search
+            src="/images/Search.png"
+            alt="검색"
+            width="30"
+            height="30"
+            onClick={handleClick}
+          />
         )}
         {isLoggedIn ? (
           <LogIn onClick={() => signOut(auth)}>Logout</LogIn>
@@ -78,14 +86,6 @@ const Header = () => {
             {!isLoggedIn && <LinkWrapper href={'/join'}>Join</LinkWrapper>}
           </>
         )}
-        <Home href={'/'}>
-          <HomeLogo
-            src="/images/Home.png"
-            alt="메인 페이지"
-            width="30"
-            height="30"
-          />
-        </Home>
       </Nav>
     </HeaderWrapper>
   );

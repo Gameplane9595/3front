@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import * as API from '@/utils/api';
+import * as api from '@/utils/api';
+import React, { useEffect, useState } from 'react'
 
 const Title = styled.div`
   width: 40%;
@@ -80,11 +81,22 @@ interface PostDetail {
 };
 
 export default function Posts() {
+  const [Postdata, setPostdata] = useState<PostDetail>({})
+
+  useEffect(() => {
+    getPost()
+  }, []);
+
+  const getPost = async () => {
+    const response = await api.get<PostDetail>('/posts/1')
+    setPostdata(response.data)
+  };
+
   return (
     <>
-      <Title>Title</Title>
-      <Author>Jiwon · <span style={{color: "gray", fontSize: "0.7rem"}}>2023.05.01</span></Author>
-      <Post>It is story about...</Post>
+      <Title>{Postdata.title}</Title>
+      <Author>{Postdata.user.nickname} · <span style={{color: "gray", fontSize: "0.7rem"}}>Date</span></Author>
+      <Post>{Postdata.content}</Post>
       <MorePosts>
         <MorePost>Prev Post <MorePostTitle>Prev title blah blah</MorePostTitle></MorePost>
         <MorePost>Next Post <MorePostTitle>Next title blah blah</MorePostTitle></MorePost>
