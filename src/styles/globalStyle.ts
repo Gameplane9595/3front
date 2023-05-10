@@ -1,5 +1,5 @@
-import { createGlobalStyle } from 'styled-components'
-import reset from 'styled-reset'
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
 
 export const GlobalStyle = createGlobalStyle`
 ${reset};
@@ -7,7 +7,7 @@ ${reset};
   	line-height: 1;
     font-family: 'Noto Sans KR', sans-serif;
   }
- 
+
   html,
   *,
   *::before,
@@ -32,7 +32,7 @@ ${reset};
     background-color: transparent;
   }
 
-  input, textarea { 
+  input, textarea {
     user-select: auto;
   }
 
@@ -44,4 +44,8 @@ ${reset};
     padding: 0;
     cursor: pointer;
   }
-`
+
+  .tox-notification, .tox-statusbar {
+    display: none !important;
+  }
+`;

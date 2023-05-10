@@ -13,10 +13,26 @@ interface Props {
 }
 
 const CategoryItem = (props: Props) => {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [categoryName, setCategoryName] = useState<string>('');
+
+  const categoryRef = useRef<HTMLInputElement>(null);
+
   const editCategory = () => {
-    console.log(`${props.category.id} 편집`);
-    props.onModalOpenedChange(true);
-    props.onCategoryItemChange(props.category);
+    setIsEdit(true);
+    setCategoryName(props.category.name);
+  };
+
+  const submitEdit = () => {
+    if (!categoryName) {
+      return categoryRef.current?.focus();
+    }
+    const catItem = {
+      id: props.category.id,
+      name: categoryName,
+    };
+    console.log('edit', catItem);
+    setIsEdit(false);
   };
 
   const deleteCategory = () => {
@@ -29,11 +45,28 @@ const CategoryItem = (props: Props) => {
 
   return (
     <CategoryItemContainer>
-      <CategoryName>{props.category.name}</CategoryName>
+      {isEdit ? (
+        <input
+          type="text"
+          ref={categoryRef}
+          value={categoryName}
+          onChange={e => setCategoryName(e.target.value)}
+        />
+      ) : (
+        <CategoryName>{props.category.name}</CategoryName>
+      )}
+
       <CategoryButtonContainer>
-        <button type="button" onClick={editCategory}>
-          편집
-        </button>
+        {isEdit ? (
+          <button type="button" onClick={submitEdit}>
+            완료
+          </button>
+        ) : (
+          <button type="button" onClick={editCategory}>
+            편집
+          </button>
+        )}
+
         <button type="button" onClick={deleteCategory}>
           삭제
         </button>

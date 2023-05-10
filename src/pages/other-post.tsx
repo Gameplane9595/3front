@@ -1,10 +1,10 @@
-import UserPost from '../components/OtherUser/OtherPost';
+import OtherPost from '../components/OtherUser/OtherPost';
 
 const otherPost = () => {
 	return (
 		<>
 			<div>OtherPostPage</div>
-			<UserPost />
+			<OtherPost />
 		</>
 	);
 };

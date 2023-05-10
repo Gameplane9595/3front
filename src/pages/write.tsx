@@ -1,9 +1,11 @@
 import WritePost from '@/components/WirtePost/WritePost';
 
-export default function WritePage() {
+const write = () => {
   return (
     <>
       <WritePost />
     </>
   );
-}
+};
+
+export default write;

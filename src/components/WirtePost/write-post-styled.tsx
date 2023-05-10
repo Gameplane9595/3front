@@ -1,19 +1,37 @@
+import Image from 'next/image';
 import styled from 'styled-components';
 
 export const WritePostContainer = styled.main`
-  max-width: 720px;
+  max-width: 1140px;
   margin: 0 auto;
+  padding: 0 20px;
 `;
 
 export const WriteFormContainer = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: 10px;
+  padding-bottom: 40px;
 `;
-export const SubmitButtonContainer = styled.div`
-  width: 100%;
+
+export const SelectAndButtonsContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+export const CategorySelectWrapper = styled.div`
+  select {
+    width: 140px;
+    height: 32px;
+    font-size: 16px;
+    outline: none;
+  }
+`;
+
+export const SubmitButtonContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  align-items: center;
 
   button {
     border: none;
@@ -72,19 +90,28 @@ export const ContentTextArea = styled.textarea`
   }
 `;
 
-export const SummaryWrapper = styled.div`
+export const SummaryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
+  align-items: left;
+  margin-bottom: 5px;
+`;
+
+export const SummaryButtonWrapper = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 200px;
   button {
     height: 32px;
-    width: 80px;
+    text-align: left;
     border: none;
-    padding: 5px 0;
-    border-radius: 10px;
-    /* background-color: #aec3b0; */
     background: none;
-    margin-bottom: 10px;
+    outline: none;
+    padding-left: 5px;
+    border-radius: 10px;
+
     color: #598392;
     font-weight: bold;
     font-size: 1.1rem;
@@ -95,20 +122,17 @@ export const SummaryWrapper = styled.div`
   }
 `;
 
-export const SummaryTextArea = styled.textarea`
+export const SummaryTextarea = styled.textarea`
+  height: 100px;
   resize: none;
+  padding: 7px 12px;
   border: none;
-  padding: 10px 5px;
-  font-size: 1.1rem;
-  height: 200px;
+  background-color: #f8feff;
   &::placeholder {
-    color: #bbb;
-  }
-  &:focus {
-    &::placeholder {
-      color: #aec3b0;
-    }
+    color: #889092;
   }
 `;
+
+export const SuggestImage = styled(Image)``;
 
 export const CategoryContainer = styled.div``;

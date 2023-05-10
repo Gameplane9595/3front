@@ -3,46 +3,51 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const HeaderWrapper = styled.header`
-  min-width: 1000px;
-  max-width: 1800px;
-  text-align: center;
-  padding: 20px 20px;
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 20px 10px;
+  align-items: center;
+
+  @media (max-width: 540px) {
+    & {
+      flex-direction: column-reverse;
+    }
+  }
+`;
+
+export const Title = styled.div`
+  font-family: 'Roboto Flex', sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  color: #598392;
+  padding: 20px 0;
 `;
 
 export const Nav = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
-  position: relative;
-  right: 10px;
+  align-items: center;
+  width: 360px;
 `;
 
 export const LinkWrapper = styled(Link)`
   margin: 0 0 0 25px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
 `;
 
 export const Search = styled(Image)`
   cursor: pointer;
-  position: relative;
-  bottom: 5px;
-  right: 5px;
-`
-
-export const Title = styled.div`
-  font-family: 'Roboto Flex', sans-serif;
-  font-weight: bold;
-  font-size: 60px;
-  position: relative;
-  top: 40px;
-  left: 44%;
-  width: 330px;
-`
+  width: 28px;
+  height: 28px;
+`;
 
 export const SearchUI = styled.div`
-  .search{
+  .search {
     position: relative;
     top: 100%;
     left: 50%;
@@ -52,18 +57,18 @@ export const SearchUI = styled.div`
     transition: all 0.3s ease-in-out;
   }
 
-  .show{
+  .show {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, 0);
   }
 
-  .hide{
+  .hide {
     opacity: 0;
     visibility: hidden;
     transform: translate(-50%, -20%);
   }
-`
+`;
 
 export const SearchInput = styled.input`
   font-family: 'Roboto Flex', sans-serif;
@@ -71,7 +76,7 @@ export const SearchInput = styled.input`
   width: 150px;
   border: 0;
   border-bottom: 1px solid;
-`
+`;
 
 export const SearchButton = styled.button`
   border: none;
@@ -81,22 +86,16 @@ export const SearchButton = styled.button`
   font-weight: bold;
   font-size: 15px;
   width: 60px;
-  height: 30px;
+  height: 28px;
   position: relative;
   bottom: 3px;
   left: 2px;
-`
+`;
 
 export const Home = styled(Link)`
   cursor: pointer;
-`
+`;
 
-export const HomeLogo = styled(Image)`
-  z-index: 1;
-  position: relative;
-  left: 25px;
-  bottom: 5px;
-`
 export const LogIn = styled.button`
   border: none;
   background: none;
@@ -104,8 +103,8 @@ export const LogIn = styled.button`
   font-family: 'Roboto Flex', sans-serif;
   position: relative;
   bottom: 5px;
-  font-size: 20px;
+  font-size: 16px;
   margin: 0 0 0 25px;
   cursor: pointer;
   text-decoration: none;
-`
+`;
