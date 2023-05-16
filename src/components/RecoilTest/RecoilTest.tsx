@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { testState } from '@/store/test';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { getUserInfo } from '@/utils/util';
 
 const RecoilTest = () => {
@@ -10,10 +10,15 @@ const RecoilTest = () => {
     setTest(e.target.value);
   };
 
-  const getUser = () => {
+  const getUser = async() => {
     const userInfo = getUserInfo();
     console.log('user', userInfo);
   };
+
+  useEffect(()=>{
+    const {nickname} = getUserInfo();
+    console.log('user', nickname);
+  })
 
   return (
     <>
