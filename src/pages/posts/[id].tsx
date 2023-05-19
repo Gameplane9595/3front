@@ -98,6 +98,7 @@ export default function Posts() {
   const [Id, setId] = useState<string>('');
   const [Postdata, setPostdata] = useState<PostDetail>();
   const [Isliked, setIsliked] = useState<Boolean>(false);
+  const [isEditingCommentId, setIsEditingCommentId] = useState<number | null>(null)
 
   useEffect(() => {
     if (router.isReady) {
@@ -221,15 +222,17 @@ export default function Posts() {
                 {new Date(comment.createdAt).toString().substring(0, 21)}
                 {user?.displayName == comment.User.nickname ? (
                   <>
-                    <span style={{ color: 'blue' }}> · 수정</span>
+                    <span style={{ color: 'blue' }} onClick={() => {
+                      setIsEditingCommentId(comment.id)
+                    }}> · 수정</span>
                     <span onClick={() => deleteComment(comment.id)} style={{ color: 'red' }}> · 삭제</span>
                   </>
                 ) : null}
               </div>
             </CommentAuthor>
-            {user?.displayName == comment.User.nickname ? (
+            {isEditingCommentId === comment.id ? (
               <Comment>
-                <UpdateComment placeholder={comment.content}></UpdateComment>
+                <UpdateComment placeholder={comment.content} value={comment.content}></UpdateComment>
               </Comment>
             ) : (
               <Comment>{comment.content}</Comment>
