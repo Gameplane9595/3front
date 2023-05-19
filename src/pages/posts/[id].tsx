@@ -96,7 +96,7 @@ export default function Posts() {
   const user = auth.currentUser || null;
   const router = useRouter();
   const [Id, setId] = useState<string>('');
-  const [Postdata, setPostdata] = useState<PostDetail>({});
+  const [Postdata, setPostdata] = useState<PostDetail>();
   const [Isliked, setIsliked] = useState<Boolean>(false);
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function Posts() {
     const response = await api.get(`/posts/${id}`);
     const data = response.data?.data
     console.log(data);
-    
+
     for(let like of data.Likers) {
       if (like.nickname == user?.displayName) {
         setIsliked(true)
@@ -166,11 +166,15 @@ export default function Posts() {
   // const updateComment = async (commentId, data)=>{
   //   try {
   //       await api.patch(`/comments/${data.commentId}`, data);
-  //   
+  //
   //   } catch (error : any) {
   //       alert(error);
   //   }
   // };
+
+  if (!Postdata) {
+    return <></>
+  }
 
   return (
     <>
