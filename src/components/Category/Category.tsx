@@ -11,6 +11,10 @@ import { CategoryType } from '@/types/getTypes';
 import { CategoryFormType } from '@/types/formTypes';
 import * as API from '@/utils/api';
 
+interface ResponseType {
+  data: CategoryType[];
+}
+
 const Category = () => {
   const [categories, setCategories] = useState<CategoryType[]>();
 
@@ -21,8 +25,7 @@ const Category = () => {
   const categoryRef = useRef<HTMLInputElement>(null);
 
   const getCategories = async () => {
-    const response = await API.get<CategoryType>('/categories');
-    console.log('res', response.data.data);
+    const response = await API.get<ResponseType>('/categories');
     setCategories(response.data.data);
   };
 
@@ -30,7 +33,7 @@ const Category = () => {
     e.preventDefault();
     const name = categoryRef.current?.value;
 
-    if (name.length < 1) {
+    if (name && name.length < 1) {
       alert('카테고리를 입력하세요');
       categoryRef.current?.focus();
     }
