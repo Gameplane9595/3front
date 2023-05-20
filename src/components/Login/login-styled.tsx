@@ -5,9 +5,9 @@ export const Form = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid;
+    border: 2px solid;
     width: 500px;
-    height: 400px;
+    height: 500px;
     margin-top: 50px;
     position: relative;
     top: 140px;

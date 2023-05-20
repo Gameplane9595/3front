@@ -3,13 +3,15 @@ import {
   CategoryItemContainer,
   CategoryName,
   CategoryButtonContainer,
+  SubmitEditButton,
 } from './category-styled';
-import { categoryType } from '@/types/category';
+import { CategoryType } from '@/types/getTypes';
+import { CategoryFormType } from '@/types/formTypes';
+import * as API from '@/utils/api';
 
 interface Props {
-  category: categoryType;
-  onCategoryItemChange: (item: Props['category']) => void;
-  onModalOpenedChange: (isOpened: boolean) => void;
+  category: CategoryType;
+  getCategories: () => void;
 }
 
 const CategoryItem = (props: Props) => {
@@ -23,20 +25,22 @@ const CategoryItem = (props: Props) => {
     setCategoryName(props.category.name);
   };
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
     if (!categoryName) {
       return categoryRef.current?.focus();
     }
-    const catItem = {
-      id: props.category.id,
+    await API.patch<CategoryFormType>(`/categories/${props.category.id}`, {
       name: categoryName,
-    };
-    console.log('edit', catItem);
+    });
     setIsEdit(false);
+    props.getCategories();
   };
 
-  const deleteCategory = () => {
-    console.log(`${props.category.id} 삭제`);
+  const deleteCategory = async () => {
+    if (confirm('카테고리를 삭제하시겠습니까?')) {
+      await API.delete<CategoryFormType>(`/categories/${props.category.id}`);
+      props.getCategories();
+    }
   };
 
   useEffect(() => {
@@ -58,18 +62,24 @@ const CategoryItem = (props: Props) => {
 
       <CategoryButtonContainer>
         {isEdit ? (
-          <button type="button" onClick={submitEdit}>
-            완료
-          </button>
+          <>
+            <SubmitEditButton type="button" onClick={submitEdit}>
+              완료
+            </SubmitEditButton>
+            <SubmitEditButton type="button" onClick={() => setIsEdit(false)}>
+              취소
+            </SubmitEditButton>
+          </>
         ) : (
-          <button type="button" onClick={editCategory}>
-            편집
-          </button>
+          <>
+            <SubmitEditButton type="button" onClick={editCategory}>
+              편집
+            </SubmitEditButton>
+            <SubmitEditButton type="button" onClick={deleteCategory}>
+              삭제
+            </SubmitEditButton>
+          </>
         )}
-
-        <button type="button" onClick={deleteCategory}>
-          삭제
-        </button>
       </CategoryButtonContainer>
     </CategoryItemContainer>
   );

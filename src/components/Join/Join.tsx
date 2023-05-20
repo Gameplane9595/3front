@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { useRouter } from 'next/router';
 import {
   Container,
   Form,
@@ -10,6 +10,7 @@ import {
   InputTitle,
   Bio,
 } from './join-styled';
+import * as API from '@/utils/api';
 
 interface SignupData {
   email: string;
@@ -20,6 +21,7 @@ interface SignupData {
 }
 
 const Join = () => {
+  const router = useRouter();
   const [signupData, setSignupData] = useState<SignupData>({
     email: '',
     password: '',
@@ -39,14 +41,11 @@ const Join = () => {
     // 회원가입 로직 구현
 
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/v1/auth/join',
-        signupData,
-        {
-          timeout: 10000, // 10초 시간 제한 설정
-        }
-      );
+      const response = await API.post('/auth/join', signupData, {
+        timeout: 10000, // 10초 시간 제한 설정
+      });
       console.log(response);
+      router.push('/login');
     } catch (error) {
       console.error(error);
       alert('회원가입이 완료되지 않았습니다!');

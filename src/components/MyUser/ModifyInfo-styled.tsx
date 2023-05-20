@@ -1,38 +1,80 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	width: 30rem;
-	height: 40rem;
-	margin-top: 10px;
-	position: relative;
-	top: 5rem;
-	left: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+	height: auto;
+
+  * {
+    display: flex;
+    align-items: center;   
+  }
 `;
 
 export const Form = styled.form`
 	display: flex;
 	flex-direction: column;
+	justify-content: left;
 	align-items: center;
-	gap: 1rem;
-	padding: 1rem;
-	border: 1px solid;
+
+	width: 55%;
+	height: 70%;
+
+	border: 1px solid black;
 	border-radius: 4px;
-	width: 150%;
-	height: 150%;
 `;
 
+export const SignupTitle = styled.h2`
+	font-size: 2rem;
+	font-family: 'Roboto Flex', sans-serif;
+	font-weight: bold;
+
+	margin: 1rem;
+`
+
+export const InputWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	width: 80%;
+`
+
+export const InputTitle = styled.h2`
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	font-family: 'Roboto Flex', sans-serif;
+	text-align: left;
+
+	width: 80%;
+	margin-top: 1.5rem;
+`
+
 export const Input = styled.input`
-	padding: 1rem;
-	margin-top: 2rem;
+
+	width: 80%;
+	margin: 0.5rem;
+
 	border: 0;
 	border-bottom: 1px solid;
-	width: 32rem;
 	font-size: 1rem;
 `;
+
+export const Bio = styled.textarea`
+    resize: none; // 사용자가 크기를 조절할 수 없도록 설정.
+    overflow-y: scroll;
+		font-size: 1rem;
+
+    width: 80%;
+		height: 5rem;
+
+    border: 1px solid;
+    padding: 0.5rem;
+`
 
 export const ButtonWrapper = styled.div`
 	display: flex;
@@ -70,26 +112,3 @@ export const Button = styled.button`
 		}
 	}
 `;
-
-export const InputWrapper = styled.div`
-	margin-top: 100px;
-	display: flex;
-	flex-direction: column;
-	justify-content:center;
-`
-
-export const SignupTitle = styled.h2`
-	font-size: 30px;
-	font-family: 'Roboto Flex', sans-serif;
-	font-weight: bold;
-	position: relative;
-	top: 10%;
-`
-
-export const InputTitle = styled.h2`
-	font-family: 'Roboto Flex', sans-serif;
-	text-align: left;
-	position: relative;
-	left: 0px;
-	top: 5%;
-`

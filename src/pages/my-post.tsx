@@ -3,7 +3,7 @@ import MyPost from '../components/MyUser/MyPost';
 const MyPostPage = () => {
 	return (
 		<>
-			<div>MyPostPage</div>
+			{/* <div>MyPostPage</div> */}
 			<MyPost />
 		</>
 	);

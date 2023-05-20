@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
+import * as API from '@/utils/api';
 
 type BtnProps = {
   value: any;
@@ -11,16 +12,18 @@ type BtnProps = {
 export default memo(function Btn(props: BtnProps) {
   const router = useRouter();
 
-  const goToPages = () => {
-    if (props.alert !== null) {
-      alert(props.alert)
+  const handleClick = async () => {    
+    if (props.value === '회원탈퇴') {
+      const res: any = await API.delete(`/user`)
+      alert(res)
       router.push(props.onRoute)
-    } else router.push(props.onRoute)
-  };
+    } 
+    else router.push(props.onRoute)
+  }
 
   return <>
     <Button
-      onClick={goToPages}
+      onClick={handleClick}
     >
       {`${props.value}`}
     </Button>

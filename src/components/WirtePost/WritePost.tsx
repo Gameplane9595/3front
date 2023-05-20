@@ -5,25 +5,30 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import Image from 'next/image';
 import {
   WritePostContainer,
-  WriteFormContainer,
   SubmitButtonContainer,
-  InputsContainer,
   TitleInput,
+  ContentTextArea,
   SubmitButton,
   DeleteButton,
   SelectAndButtonsContainer,
   CategorySelectWrapper,
   SummaryContainer,
   SummaryButtonWrapper,
-  SuggestImage,
   SummaryTextarea,
 } from './write-post-styled';
+import { Spinner } from '../common/spinner';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { Editor, IAllProps as EditorProps } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from 'tinymce';
+import * as API from '@/utils/api';
+import { getUserInfo } from '@/utils/util';
+import { CategoryType, PostType } from '@/types/getTypes';
+import { CategoryFormType, PostFormType } from '@/types/formTypes';
+import axios from 'axios';
 
 const EditorDynamic = dynamic(() => import('./Editor'), {
   ssr: false,
@@ -34,58 +39,123 @@ const EditorForwardRef = forwardRef(
     return <EditorDynamic {...props} forwardedRef={ref} />;
   }
 );
-// EditorForwardRef.displayName = 'Editor';
+EditorForwardRef.displayName = 'Editor';
 
 interface Props {
   isEdit?: Boolean;
 }
 
 interface Option {
-  id: string;
-  value: string;
+  id: string | undefined;
+  value: string | undefined;
 }
 
 const WritePost = ({ isEdit }: Props) => {
-  const [editContent, setEditContent] = useState<string>('');
+  const [post, setPost] = useState<PostType>(null);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [postId, setPostId] = useState<string>('');
   const titleRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<TinyMCEEditor | null>(null);
-  const summaryRef = useRef<HTMLTextAreaElement>(null);
+  const summaryRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
-  const options: Option[] = [
-    { id: '1', value: 'option1option1option1option1' },
-    { id: '2', value: 'option2' },
-    { id: '3', value: 'option3' },
-  ];
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    const selected = options.find(option => option.value === selectedValue);
-    setSelectedOption(selected || null);
-  };
 
   useEffect(() => {
     console.log('edit', isEdit);
     if (router.isReady && isEdit) {
       const { id } = router.query;
-      console.log('id', id);
-
-      titleRef.current && (titleRef.current.value = '수정 타이틀' + id);
-      setEditContent('edit');
+      id && getPost(id);
+      setPostId(id);
+      // titleRef.current && (titleRef.current.value = '수정 타이틀' + id);
+      // setEditContent('edit');
     }
   }, [router, isEdit]);
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    getCategories();
+    console.log('cate', categories);
+  }, []);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    const selected = categories.find(option => option.name === selectedValue);
+    setSelectedOption({ id: selected?.id, value: selected?.name });
+    console.log('selectedOption', selectedOption);
+  };
+
+  const getPost = async (id: string) => {
+    const response = await API.get<PostType>(`/posts/${id}`);
+    console.log('category response : ', response.status);
+    setPost(response.data.data);
+  };
+
+  useEffect(() => {
+    if (post) {
+      titleRef.current && (titleRef.current.value = post.title);
+      summaryRef.current && (summaryRef.current.value = post.summary);
+      if (post.Category) {
+        setSelectedOption({ id: post.Category.id, value: post.Category.name });
+      }
+    }
+  }, [post]);
+
+  const getCategories = async () => {
+    const response = await API.get<CategoryType>('/categories');
+    console.log('category response : ', response);
+    setCategories(response.data.data);
+  };
+
+  const getModel = async (data: string) => {
+    const jsonData = JSON.stringify({
+      text: data,
+    });
+
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        'http://kdt-ai6-team10.elicecoding.com:5000/summarize',
+        jsonData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('res', response);
+      const summary = response.data.summary;
+      summaryRef.current && (summaryRef.current.value = summary.trim());
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSummary = async () => {
+    const contentText = contentRef.current?.getBody().textContent;
+    console.log('text : ', contentText);
+
+    if (!contentText || contentText.length < 50) {
+      alert('내용을 50자 이상 입력해주세요');
+    } else {
+      await getModel(contentText);
+    }
+  };
+
+  const handleSubmit = async (mode: string) => {
     const title = titleRef.current?.value;
     const content = contentRef.current?.getContent();
     const summary = summaryRef.current?.value;
 
-    const contentText = contentRef.current?.getBody().textContent;
-
     if (!title) {
       alert('제목을 입력하세요');
       titleRef.current?.focus();
+      return;
+    }
+    if (!summary) {
+      alert('요약을 입력하세요');
+      summaryRef.current?.focus();
       return;
     }
     if (!content) {
@@ -94,66 +164,107 @@ const WritePost = ({ isEdit }: Props) => {
       return;
     }
 
-    console.log('text : ', contentText);
     console.log('title : ', title);
     console.log('content : ', content);
     console.log('summary : ', summary);
     console.log('option : ', selectedOption);
+
+    // const data = { title, content, summary };
+    // if(selectedOption) {
+    //   data.categoryId
+    // }
+
+    if (mode === 'edit') {
+      const response = await API.patch<PostFormType>(`/posts/${postId}`, {
+        title,
+        content,
+        summary,
+        categoryId: selectedOption?.id,
+      });
+      console.log('post response : ', response);
+    }
+    if (mode === 'create') {
+      const response = await API.post<PostFormType>('/posts', {
+        title,
+        content,
+        summary,
+        categoryId: selectedOption?.id,
+      });
+      console.log('post response : ', response);
+    }
+
+    router.push('/')
   };
 
-  const handleDelete = () => {
-    console.log('삭제');
+  const handleDelete = async () => {
+    if (confirm('게시글을 삭제하시겠습니까?')) {
+      const response = await API.delete<PostFormType>(`/posts/${postId}`);
+      console.log('delete response : ', response);
+      router.push(`/`);
+    }
   };
 
-  const handleSummary = () => {
-    summaryRef.current && (summaryRef.current.value = '요약추천입니다아아아아');
+  const goback = () => {
+    router.back();
   };
 
   return (
     <WritePostContainer>
-      <WriteFormContainer>
-        <SelectAndButtonsContainer>
-          <CategorySelectWrapper>
-            <select
-              value={selectedOption?.value || ''}
-              onChange={handleSelectChange}
-            >
-              <option value="" className="defaultSelect">
-                카테고리 선택
-              </option>
-              {options.map(option => (
-                <option key={option.id} value={option.value}>
-                  {option.value}
+      <SelectAndButtonsContainer>
+        <CategorySelectWrapper>
+          <select
+            value={selectedOption?.value || ''}
+            onChange={handleSelectChange}
+          >
+            <option value="" className="defaultSelect">
+              ---카테고리---
+            </option>
+            {categories &&
+              categories?.map(option => (
+                <option key={option.id} value={option.name}>
+                  {option.name}
                 </option>
               ))}
-            </select>
-          </CategorySelectWrapper>
-          <SubmitButtonContainer>
-            {isEdit ? (
-              <SubmitButton type="button" onClick={handleSubmit}>
-                완료
-              </SubmitButton>
-            ) : (
-              <SubmitButton type="button" onClick={handleSubmit}>
-                저장
-              </SubmitButton>
-            )}
+          </select>
+        </CategorySelectWrapper>
 
+        {isEdit ? (
+          <SubmitButtonContainer>
+            <SubmitButton type="button" onClick={() => handleSubmit('edit')}>
+              완료
+            </SubmitButton>
             <DeleteButton type="button" onClick={handleDelete}>
               삭제
             </DeleteButton>
           </SubmitButtonContainer>
-        </SelectAndButtonsContainer>
-        <InputsContainer>
-          <TitleInput
-            name="title"
-            placeholder="제목을 입력하세요"
-            type="text"
-            ref={titleRef}
-          />
-          <SummaryContainer>
-            <SummaryButtonWrapper>
-              <SuggestImage
+        ) : (
+          <SubmitButtonContainer>
+            <SubmitButton type="button" onClick={() => handleSubmit('create')}>
+              저장
+            </SubmitButton>
+            <DeleteButton type="button" onClick={goback}>
+              취소
+            </DeleteButton>
+          </SubmitButtonContainer>
+        )}
+      </SelectAndButtonsContainer>
+      <TitleInput
+        name="title"
+        placeholder="제목을 입력하세요"
+        type="text"
+        ref={titleRef}
+        maxLength={50}
+      />
+      <SummaryContainer>
+        <SummaryButtonWrapper>
+          {isLoading ? (
+            <>
+              <Spinner />
+              <span>요약 추천 받는 중</span>
+            </>
+          ) : (
+            <>
+              <Image
                 src="/images/lightbulb.svg"
                 alt="한 줄 요약 추천받기"
                 width="25"
@@ -162,80 +273,34 @@ const WritePost = ({ isEdit }: Props) => {
               <button type="button" onClick={handleSummary}>
                 한 줄 요약 추천받기
               </button>
-            </SummaryButtonWrapper>
-            <SummaryTextarea
-              ref={summaryRef}
-              placeholder="한 줄 요약을 추천받아보세요"
-            />
-          </SummaryContainer>
-          <div style={{ height: '600px' }}>
-            <EditorForwardRef
-              onInit={(evt, editor) => {
-                contentRef.current = editor;
-              }}
-              initialValue={editContent || ''}
-              init={{
-                height: '100%',
-                placeholder: '내용을 입력하세요',
-                font_family_formats: 'Noto Sans KR',
-                plugins:
-                  'lists link paste codesample emoticons wordcount image',
-                menubar: 'insert | format | tools',
-                toolbar:
-                  'undo redo | blocks | formatselect | bold italic | emoticons codesample image | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ',
-                image_title: false,
-                /* enable automatic uploads of images represented by blob or data URIs*/
-                automatic_uploads: true,
-                /*
-                    URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
-                    images_upload_url: 'postAcceptor.php',
-                    here we add custom filepicker only to Image dialog
-                  */
-                file_picker_types: 'image',
-                /* and here's our custom image picker*/
-                file_picker_callback: function (cb, value, meta) {
-                  var input = document.createElement('input');
-                  input.setAttribute('type', 'file');
-                  input.setAttribute('accept', 'image/*');
-
-                  /*
-                      Note: In modern browsers input[type="file"] is functional without
-                      even adding it to the DOM, but that might not be the case in some older
-                      or quirky browsers like IE, so you might want to add it to the DOM
-                      just in case, and visually hide it. And do not forget do remove it
-                      once you do not need it anymore.
-                    */
-
-                  input.onchange = function () {
-                    var file = this.files[0];
-
-                    var reader = new FileReader();
-                    reader.onload = function () {
-                      /*
-                          Note: Now we need to register the blob in TinyMCEs image blob
-                          registry. In the next release this part hopefully won't be
-                          necessary, as we are looking to handle it internally.
-                        */
-                      var id = 'blobid' + new Date().getTime();
-                      var blobCache =
-                        tinymce.activeEditor.editorUpload.blobCache;
-                      var base64 = reader.result.split(',')[1];
-                      var blobInfo = blobCache.create(id, file, base64);
-                      blobCache.add(blobInfo);
-
-                      /* call the callback and populate the Title field with the file name */
-                      cb(blobInfo.blobUri(), { title: file.name });
-                    };
-                    reader.readAsDataURL(file);
-                  };
-
-                  input.click();
-                },
-              }}
-            />
-          </div>
-        </InputsContainer>
-      </WriteFormContainer>
+            </>
+          )}
+        </SummaryButtonWrapper>
+        <SummaryTextarea
+          ref={summaryRef}
+          maxLength={200}
+          placeholder="한 줄 요약을 입력하세요 (내용이 50자 이상일 때는 요약 추천을 받아보세요)"
+        />
+      </SummaryContainer>
+      <ContentTextArea>
+        <EditorForwardRef
+          onInit={(evt, editor) => {
+            contentRef.current = editor;
+          }}
+          initialValue={post?.content || ''}
+          init={{
+            height: '100%',
+            placeholder: '내용을 입력하세요',
+            font_family_formats: 'Noto Sans KR',
+            plugins: 'lists link paste codesample emoticons',
+            menubar: 'format',
+            toolbar:
+              'undo redo | blocks | formatselect | bold italic | emoticons codesample link | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ',
+            image_title: false,
+            paste_data_image: false,
+          }}
+        />
+      </ContentTextArea>
     </WritePostContainer>
   );
 };

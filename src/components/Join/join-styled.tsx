@@ -6,7 +6,7 @@ export const Container = styled.div`
     align-items: center;
     flex-direction: column;
     width: 500px;
-    height: 900px;
+    height: 1100px;
     margin-top: 10px;
     position: relative;
     top: 100px;
@@ -22,7 +22,7 @@ export const Form = styled.form`
     border: 1px solid;
     border-radius: 4px;
     width: 150%;
-    height: 150%;
+    height: 200%;
     position: relative;
     bottom: 55px;
 `;
@@ -56,7 +56,6 @@ export const Button = styled.button`
 `;
 
 export const InputWrapper = styled.div`
-    margin-top: 60px;
     display: flex;
     flex-direction: column;
     justify-content:center;

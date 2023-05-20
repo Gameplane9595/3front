@@ -2,10 +2,12 @@ import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
 export const GlobalStyle = createGlobalStyle`
-${reset};
+
   body {
   	line-height: 1;
     font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
   }
 
   html,
@@ -14,6 +16,8 @@ ${reset};
   *::after {
     box-sizing: border-box;
     font-family: 'Noto Sans KR', sans-serif;
+    padding: 0;
+    line-height:1.5;
   }
 
   a {

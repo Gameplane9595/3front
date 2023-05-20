@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const HeaderWrapper = styled.header`
-  max-width: 1140px;
+  max-width: 1800px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -101,10 +101,18 @@ export const LogIn = styled.button`
   background: none;
   font-weight: bold;
   font-family: 'Roboto Flex', sans-serif;
-  position: relative;
-  bottom: 5px;
   font-size: 16px;
   margin: 0 0 0 25px;
   cursor: pointer;
   text-decoration: none;
+`;
+
+export const WriteButton = styled.span`
+  background-color: #aec3b0;
+  padding: 3px 10px;
+  border-radius: 10px;
+  &:hover {
+    opacity: 0.7;
+    transition: all 0.2s;
+  }
 `;

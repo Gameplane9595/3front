@@ -1,50 +1,47 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   CategoryContainer,
   CategoryFormWrapper,
   CategoryItemWrapper,
+  AddButton,
 } from './category-styled';
 import CategoryItem from './CategoryItem';
 import CategoryModal from './CategoryModal';
-import { categoryType } from '@/types/category';
+import { CategoryType } from '@/types/getTypes';
+import { CategoryFormType } from '@/types/formTypes';
+import * as API from '@/utils/api';
 
 const Category = () => {
-  const [dummyCategory, setDummyCategory] = useState<categoryType[]>([
-    { id: '1', name: '카테고리1' },
-    { id: '2', name: '카테고리2' },
-    { id: '3', name: '카테고리3' },
-  ]);
-  const [isModalOpened, setIsModalOpened] = useState(false);
-  const [categoryItem, setCategoryItem] = useState<categoryType>({
-    id: '',
-    name: '',
-  });
+  const [categories, setCategories] = useState<CategoryType[]>();
 
-  const handleCategoryItem = (item: categoryType) => {
-    setCategoryItem(item);
-  };
-
-  const handleModalOpened = (isOpened: boolean) => {
-    setIsModalOpened(isOpened);
-  };
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const categoryRef = useRef<HTMLInputElement>(null);
 
-  const addCategory = (e: React.FormEvent<HTMLFormElement>) => {
+  const getCategories = async () => {
+    const response = await API.get<CategoryType>('/categories');
+    console.log('res', response.data.data);
+    setCategories(response.data.data);
+  };
+
+  const addCategory = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const name = categoryRef.current?.value;
 
-    categoryRef.current?.value &&
-      setDummyCategory([
-        ...dummyCategory,
-        {
-          id: String(Math.random()),
-          name: categoryRef.current?.value,
-        },
-      ]);
+    if (name.length < 1) {
+      alert('카테고리를 입력하세요');
+      categoryRef.current?.focus();
+    }
 
+    const response = await API.post<CategoryFormType>('/categories', {
+      name,
+    });
+
+    console.log('cat post', response);
+    await getCategories();
     categoryRef.current && (categoryRef.current.value = '');
-
-    console.log(dummyCategory);
   };
 
   return (
@@ -54,34 +51,24 @@ const Category = () => {
         <input
           type="text"
           ref={categoryRef}
-          placeholder="카테고리를 입력하세요"
+          placeholder="카테고리 추가"
           required
         />
-        <button>추가</button>
+        <AddButton>추가</AddButton>
       </CategoryFormWrapper>
       <CategoryItemWrapper>
-        {dummyCategory &&
-          dummyCategory.length > 0 &&
-          dummyCategory.map(item => {
+        {categories &&
+          categories.length > 0 &&
+          categories.map(item => {
             return (
               <CategoryItem
                 category={item}
                 key={item.id}
-                onCategoryItemChange={handleCategoryItem}
-                onModalOpenedChange={handleModalOpened}
+                getCategories={getCategories}
               />
             );
           })}
       </CategoryItemWrapper>
-
-      {/* {isModalOpened ? (
-        <div>
-          <CategoryModal
-            categoryItem={categoryItem}
-            onModalOpenedChange={handleModalOpened}
-          />
-        </div>
-      ) : null} */}
     </CategoryContainer>
   );
 };

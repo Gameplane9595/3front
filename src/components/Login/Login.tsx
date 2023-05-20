@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Form,
   LoginTitle,
@@ -8,10 +9,17 @@ import {
   Button,
 } from './login-styled';
 import { signInWithEmailAndPassword, getIdToken, signOut } from 'firebase/auth';
-import axios from 'axios';
 import auth from '../common/auth';
+import * as API from '@/utils/api';
+
+
+type LoginType = {
+  email: string;
+  password: string;
+};
 
 const Login = () => {
+  const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -26,28 +34,31 @@ const Login = () => {
         password
       );
       const idToken = await userCredential.user.getIdToken();
-
-      const response = await axios.post(
-        'http://localhost:3001/api/v1/auth/login',
-        {},
+      console.log('token', idToken);
+      const response = await API.post<LoginType>(
+        '/auth/login',
+        { email, password },
         {
           headers: {
             Authorization: `Bearer ${idToken}`,
           },
         }
       );
+
       console.log('Sent request headers:', response.config.headers);
       console.log('response:', response.data);
 
-      if (response.data.success) {
+      if (response.status === 200) {
         // 백엔드 검증 성공
         // 로그인 처리 및 다음 페이지로 이동
         console.log('response:', response);
+        router.push('/');
       } else {
         // 백엔드 검증 실패
         // 로그인 실패 처리 및 오류 메시지 표시
         await signOut(auth); // Firebase에서 로그아웃
-        alert('로그인 실패: ' + response.data.errorMessage);
+        console.error('로그인 실패: ' + response.error);
+        alert('로')
       }
     } catch (error) {
       console.log(error);

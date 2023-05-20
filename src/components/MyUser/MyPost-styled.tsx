@@ -12,7 +12,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;   
-    margin: 1rem;
+    margin: 0.5rem;
   }
 `;
 
@@ -20,18 +20,18 @@ export const TopDiv = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;   
-	justify-content: space-between;
-
-	padding: 3rem 3rem;
-
-	width: 75%
+	justify-content: right;
+	padding: 0 3%;
+	width: 100%;
 `
 
 export const SearchDiv = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;   
-	justify-content: space-between;
+	justify-content: space-between;	
+
+	margin-left: 3%;
 `
 
 export const SearchInput = styled.input`
@@ -58,46 +58,60 @@ export const SearchBtn = styled.button`
   background-color: white;
 `
 
-export const ProfileDiv = styled.div`
+export const MainWrap = styled.div`
 	display: flex;
 	flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-	margin: 3rem;
+	align-items: center;
+	justify-content: space-around;
 
-	width: 75%;
-
-	border: 1px solid gray;
+	width: 100%;
 `
 
-export const ImgWrap = styled.img`
+export const SideDiv = styled.div`
 	display: flex;
 	flex-direction: column;
-  align-items: center;
-  justify-content: center;
+	align-items: center;
+	width: 15%;
+	margin-left: 3%;
+	
+	
+	border: 1px solid lightgray;
 
-	flex-shrink: 0;
-	width: 25rem;	
+	& > div {
+		justify-content: center;		
+		padding: 0.5rem;
+		width: 50%;
+		border-bottom: 1px solid black;
+	}
+
+	& > button {
+		padding-bottom: 0.5rem;
+		margin: 0rem;
+
+		border: 0px;
+		background-color: white;
+		&: hover {
+			color: green;
+		}
+	}
 `
 
-export const DescribeWrap = styled.div`
+export const MainDiv = styled.div`
 	display: flex;
 	flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-	width: 25rem;
-	height: 10rem;
+	align-items: center;
+	
+	width: 80%;
 `
 
 export const ContentDiv = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;   
-	margin: 3rem;
-	border: 1px solid black;
+	margin: 0 2rem 2rem 2rem;
+	border: 1px solid lightgray;
 
-	width: 75%
+	width: 95%
 `
 
 export const HeaderWrap = styled.div`
@@ -105,8 +119,10 @@ export const HeaderWrap = styled.div`
 	flex-direction: column;
 	align-items: center;   
 	justify-contents: center;
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid black;
 
+	margin: 0.5rem 0;
+	padding: 1rem 0;
 	width: 90%
 `
 
@@ -124,10 +140,12 @@ export const PostThumbnail = styled.img`
 export const FooterWrap = styled.div`
 	display: flex;
 	flex-direction: row;
-	align-items: space-between;   
-	justify-contents: center;
-	margin: 0 1rem 1rem 1rem;
-	// border: 1px solid black;
+	align-items: center;   
+	// justify-content: ;	
+	width: 90%;
+	margin: 0 0 0.5rem 0;
 
-	width: 90%
+	* {
+		margin-right: 10%;
+	}
 `

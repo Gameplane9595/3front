@@ -5,5 +5,5 @@ const EditorComponent = (props: any) => {
   return <Editor {...props} ref={forwardedRef} />;
 };
 
-// EditorComponent.displayName = 'Editor';
+EditorComponent.displayName = 'Editor';
 export default EditorComponent;
