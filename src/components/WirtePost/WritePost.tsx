@@ -122,7 +122,7 @@ const WritePost = ({ isEdit }: Props) => {
           },
         }
       );
-      console.log('res', response);
+      // console.log('res', response);
       const summary = response.data.summary;
       summaryRef.current && (summaryRef.current.value = summary.trim());
     } catch (error) {
